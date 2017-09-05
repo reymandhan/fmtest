@@ -2,16 +2,28 @@ package com.fm.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table(name = "user_relation")
+@Table(name = "user_relations")
 @Entity
 public class UserRelation extends BaseModel {
 
+	private String id;
 	private String userId;
 	private String relatedUserid;
 	private Integer type;
 	private Boolean isBlocked;
+
+	@Id
+	@Column
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	@Column(name = "user_id")
 	public String getUserId() {
@@ -22,7 +34,7 @@ public class UserRelation extends BaseModel {
 		this.userId = userId;
 	}
 
-	@Column(name="related_user_id")
+	@Column(name = "related_user_id")
 	public String getRelatedUserid() {
 		return relatedUserid;
 	}
@@ -40,7 +52,7 @@ public class UserRelation extends BaseModel {
 		this.type = type;
 	}
 
-	@Column(name="is_blocked")
+	@Column(name = "is_blocked")
 	public Boolean getIsBlocked() {
 		return isBlocked;
 	}
