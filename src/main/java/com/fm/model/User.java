@@ -1,5 +1,7 @@
 package com.fm.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,7 +15,18 @@ public class User extends BaseModel{
 
 	private String id;
 	private String email;
+	
+	public User(){
+		super();
+	}
 
+	public User(String id, String email){
+		super();
+		this.id = id;
+		this.email = email;
+		setCreatedDt(new Date());
+	}
+	
 	@Id
 	@Column
 	public String getId() {

@@ -1,5 +1,7 @@
 package com.fm.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,6 +16,20 @@ public class UserRelation extends BaseModel {
 	private String relatedUserid;
 	private Integer type;
 	private Boolean isBlocked;
+	
+	public UserRelation(){
+		super();
+	}
+
+	public UserRelation(String id, String userId, String relatedUserid, Integer type, Boolean isBlocked) {
+		super();
+		this.id = id;
+		this.userId = userId;
+		this.relatedUserid = relatedUserid;
+		this.type = type;
+		this.isBlocked = isBlocked;
+		this.setCreatedDt(new Date());
+	}
 
 	@Id
 	@Column
