@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public boolean createUserFriendship(String [] emails) {
+	public boolean createUserFriendship(String [] emails) throws ConstraintViolationException {
 		boolean status = false;
 		
 		try{
@@ -45,10 +46,16 @@ public class UserServiceImpl implements UserService {
 				}
 			}
 			
-			userRelationRepository.save(new UserRelation(UUID.randomUUID().toString(),ids.get(0), ids.get(1),RelationType.FRIEND.value(), false));
-			userRelationRepository.save(new UserRelation(UUID.randomUUID().toString(),ids.get(1), ids.get(0),RelationType.FRIEND.value(), false));
+			if (userRelationRepository.isFriendshipExists(emails[0], emails[1]) == 0){
+				userRelationRepository.save(new UserRelation(UUID.randomUUID().toString(),ids.get(0), ids.get(1),RelationType.FRIEND.value(), false));
+				userRelationRepository.save(new UserRelation(UUID.randomUUID().toString(),ids.get(1), ids.get(0),RelationType.FRIEND.value(), false));
+			}else{
+				throw new ConstraintViolationException("Friendship is already exists", null);
+			}
 			
 			status = true;
+		}catch (ConstraintViolationException cve){
+			throw cve;
 		}catch (Exception e){
 			e.printStackTrace();
 		}

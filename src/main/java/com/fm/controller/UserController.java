@@ -1,5 +1,7 @@
 package com.fm.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +21,7 @@ public class UserController {
 	private UserService userService;
 	
 	@RequestMapping(path="/friendrequest", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-    public CommonResponseBean createUserFriendship(@RequestBody UserFriendRequestBean requestBean) {
+    public CommonResponseBean createUserFriendship(@Valid @RequestBody UserFriendRequestBean requestBean) {
         Boolean status = userService.createUserFriendship((String[])requestBean.getFriends().stream().toArray(String[]::new));
         
         return new CommonResponseBean(status);

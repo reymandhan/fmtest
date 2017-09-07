@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Table(name = "user_relations")
@@ -16,6 +18,9 @@ public class UserRelation extends BaseModel {
 	private String relatedUserid;
 	private Integer type;
 	private Boolean isBlocked;
+	
+	private User user;
+	private User relatedUser;
 	
 	public UserRelation(){
 		super();
@@ -76,5 +81,27 @@ public class UserRelation extends BaseModel {
 	public void setIsBlocked(Boolean isBlocked) {
 		this.isBlocked = isBlocked;
 	}
+
+	@ManyToOne
+	@JoinColumn(name="user_id",insertable=false, updatable=false)
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	@ManyToOne
+	@JoinColumn(name="related_user_id", insertable=false, updatable=false)
+	public User getRelatedUser() {
+		return relatedUser;
+	}
+
+	public void setRelatedUser(User relatedUser) {
+		this.relatedUser = relatedUser;
+	}
+	
+	
 
 }
