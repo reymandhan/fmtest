@@ -9,4 +9,5 @@ import com.fm.model.User;
 public interface UserRepository extends JpaRepository<User, String>{
 
 	public User findByEmail(String email);
+	public Long deleteByEmail(String email);
 }

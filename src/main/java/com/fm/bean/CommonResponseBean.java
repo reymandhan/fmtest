@@ -11,6 +11,10 @@ public class CommonResponseBean {
 	private Boolean status;
 	private String messages;
 	private List<String> errors;
+	
+	public CommonResponseBean(){
+		super();
+	}
 
 	public CommonResponseBean(Boolean status) {
 		this.status = status;

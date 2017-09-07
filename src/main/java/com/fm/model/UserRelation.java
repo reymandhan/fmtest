@@ -15,7 +15,7 @@ public class UserRelation extends BaseModel {
 
 	private String id;
 	private String userId;
-	private String relatedUserid;
+	private String relatedUserId;
 	private Integer type;
 	private Boolean isBlocked;
 	
@@ -30,7 +30,7 @@ public class UserRelation extends BaseModel {
 		super();
 		this.id = id;
 		this.userId = userId;
-		this.relatedUserid = relatedUserid;
+		this.relatedUserId = relatedUserid;
 		this.type = type;
 		this.isBlocked = isBlocked;
 		this.setCreatedDt(new Date());
@@ -56,12 +56,12 @@ public class UserRelation extends BaseModel {
 	}
 
 	@Column(name = "related_user_id")
-	public String getRelatedUserid() {
-		return relatedUserid;
+	public String getRelatedUserId() {
+		return relatedUserId;
 	}
 
-	public void setRelatedUserid(String relatedUserid) {
-		this.relatedUserid = relatedUserid;
+	public void setRelatedUserId(String relatedUserId) {
+		this.relatedUserId = relatedUserId;
 	}
 
 	@Column

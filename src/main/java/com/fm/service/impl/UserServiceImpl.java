@@ -62,5 +62,13 @@ public class UserServiceImpl implements UserService {
 		
 		return status;
 	}
+
+	@Override
+	@Transactional
+	public void deleteUser(String email1,String email2) {
+		userRelationRepository.deleteUserRelation(email1);
+		userRepository.deleteByEmail(email1);
+		userRepository.deleteByEmail(email2);
+	}
 	
 }

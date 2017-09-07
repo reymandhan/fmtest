@@ -1,6 +1,7 @@
 package com.fm.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -12,4 +13,8 @@ public interface UserRelationRepository extends JpaRepository<UserRelation, Stri
 	
 	@Query("SELECT count(1) FROM UserRelation u JOIN u.user uu JOIN u.relatedUser uru WHERE uu.email =:email1 and uru.email=:email2 and type=1" )
     public int isFriendshipExists(@Param("email1") String email1,@Param("email2") String email2);
+	
+	@Modifying
+	@Query("DELETE FROM UserRelation ur WHERE ur.userId = (select id from User where email=:email) or ur.relatedUserId = (select id from User where email=:email)")
+	public void deleteUserRelation(@Param("email") String email);
 }
