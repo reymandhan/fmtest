@@ -2,37 +2,37 @@ package com.fm.bean;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommonResponseBean {
-	private Boolean status;
+	
+	private Boolean success;
 	private String messages;
 	private List<String> errors;
-	
-	public CommonResponseBean(){
+	private Integer count;
+
+	public CommonResponseBean() {
 		super();
 	}
 
 	public CommonResponseBean(Boolean status) {
-		this.status = status;
+		this.success = status;
 	}
 
 	public CommonResponseBean(Boolean status, String messages, List<String> errors) {
 		super();
-		this.status = status;
+		this.success = status;
 		this.messages = messages;
 		this.errors = errors;
 	}
 
-	public Boolean getStatus() {
-		return status;
+	public Boolean getSuccess() {
+		return success;
 	}
 
-	public void setStatus(Boolean status) {
-		this.status = status;
+	public void setSuccess(Boolean success) {
+		this.success = success;
 	}
 
 	public String getMessages() {
@@ -50,7 +50,13 @@ public class CommonResponseBean {
 	public void setErrors(List<String> errors) {
 		this.errors = errors;
 	}
-	
-	
+
+	public Integer getCount() {
+		return count;
+	}
+
+	public void setCount(Integer count) {
+		this.count = count;
+	}
 
 }

@@ -19,56 +19,67 @@ import com.fm.service.UserService;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private UserRelationRepository userRelationRepository;
 
 	@Override
 	@Transactional
-	public boolean createUserFriendship(String [] emails) throws ConstraintViolationException {
+	public boolean createUserFriendship(String[] emails) throws ConstraintViolationException {
 		boolean status = false;
-		
-		try{
-			List<String>ids = new ArrayList<>();
-			
-			for (String email:emails){
+
+		try {
+			List<String> ids = new ArrayList<>();
+
+			for (String email : emails) {
 				User user = userRepository.findByEmail(email);
-				if (user == null){
+				if (user == null) {
 					String id = UUID.randomUUID().toString();
 					ids.add(id);
-					
-					userRepository.save(new User(id,email));
-				}else{
+
+					userRepository.save(new User(id, email));
+				} else {
 					ids.add(user.getId());
 				}
 			}
-			
-			if (userRelationRepository.isFriendshipExists(emails[0], emails[1]) == 0){
-				userRelationRepository.save(new UserRelation(UUID.randomUUID().toString(),ids.get(0), ids.get(1),RelationType.FRIEND.value(), false));
-				userRelationRepository.save(new UserRelation(UUID.randomUUID().toString(),ids.get(1), ids.get(0),RelationType.FRIEND.value(), false));
-			}else{
+
+			if (userRelationRepository.isFriendshipExists(emails[0], emails[1]) == 0) {
+				userRelationRepository.save(new UserRelation(UUID.randomUUID().toString(), ids.get(0), ids.get(1),
+						RelationType.FRIEND.value(), false));
+				userRelationRepository.save(new UserRelation(UUID.randomUUID().toString(), ids.get(1), ids.get(0),
+						RelationType.FRIEND.value(), false));
+			} else {
 				throw new ConstraintViolationException("Friendship is already exists", null);
 			}
-			
+
 			status = true;
-		}catch (ConstraintViolationException cve){
+		} catch (ConstraintViolationException cve) {
 			throw cve;
-		}catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return status;
 	}
 
 	@Override
+	public List<String> retrieveFriendList(String email) {
+		if(userRepository.findByEmail(email) == null){
+			throw new ConstraintViolationException("Email not found", null);
+		}
+		
+		return userRelationRepository.retrieveFriendList(email);
+	}
+
+	@Override
 	@Transactional
-	public void deleteUser(String email1,String email2) {
+	public void deleteUser(String email1, String email2) {
 		userRelationRepository.deleteUserRelation(email1);
 		userRepository.deleteByEmail(email1);
 		userRepository.deleteByEmail(email2);
 	}
-	
+
 }
