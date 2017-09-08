@@ -9,5 +9,7 @@ public interface UserService {
 	
 	public List<String> retrieveFriendList(String email);
 	
-	public void deleteUser(String email1, String email2);
+	public List<String> retrieveCommonFriendList(String email1, String email2);
+	
+	public void deleteUser(String email1, String email2, boolean deleteSecondEmail);
 }

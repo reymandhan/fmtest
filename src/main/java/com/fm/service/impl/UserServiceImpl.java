@@ -64,6 +64,15 @@ public class UserServiceImpl implements UserService {
 
 		return status;
 	}
+	
+	@Override
+	public List<String> retrieveCommonFriendList(String email1, String email2) {
+		if(userRepository.findByEmail(email1) == null || userRepository.findByEmail(email2) == null){
+			throw new ConstraintViolationException("Email not found", null);
+		}
+		
+		return userRelationRepository.retrieveCommonFriendList(email1, email2);
+	}
 
 	@Override
 	public List<String> retrieveFriendList(String email) {
@@ -76,10 +85,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public void deleteUser(String email1, String email2) {
+	public void deleteUser(String email1, String email2, boolean deleteSecondEmail) {
 		userRelationRepository.deleteUserRelation(email1);
 		userRepository.deleteByEmail(email1);
-		userRepository.deleteByEmail(email2);
-	}
+		if (deleteSecondEmail){
+			userRepository.deleteByEmail(email2);
+		}
+	}	
 
 }

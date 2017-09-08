@@ -104,7 +104,7 @@ public class UserControllerTest {
 	}
 	
 	@Test
-	public void retrieveUserTest() throws Exception{
+	public void retrieveFriendListTest() throws Exception{
 		//Prepare Test Data
 		List<String> emailList = new ArrayList<>();
 		emailList.add("email@email.com");
@@ -140,5 +140,70 @@ public class UserControllerTest {
 		
 		//delete test data
 		mvc.perform(delete("/user").param("email1", "email@email.com").param("email2", "email2@email.com")).andReturn();
+	}
+	
+	@Test
+	public void retrieveCommonFriendListTest() throws Exception{
+		//Prepare Test Data
+		List<String> emailList = new ArrayList<>();
+		emailList.add("email@email.com");
+		emailList.add("email2@email.com");
+		
+		TwoEmailRequestBean bean = new TwoEmailRequestBean();
+		bean.setFriends(emailList);
+
+		byte[] r1Json = JsonUtil.toJson(bean);
+		
+		MvcResult result = mvc.perform(post("/user/friendrequest").content(r1Json)
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andReturn();
+		
+		emailList.clear();
+		emailList.add("email@email.com");
+		emailList.add("email3@email.com");
+		
+		bean = new TwoEmailRequestBean();
+		bean.setFriends(emailList);
+		
+		r1Json = JsonUtil.toJson(bean);
+		
+		mvc.perform(post("/user/friendrequest").content(r1Json)
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andReturn();
+		
+		//Email not Exists
+		emailList.clear();
+		emailList.add("notexistsemail@email.com");
+		emailList.add("email3@email.com");
+		
+		bean = new TwoEmailRequestBean();
+		bean.setFriends(emailList);
+		
+		r1Json = JsonUtil.toJson(bean);
+		
+		result = mvc.perform(post("/user/commonfriendlist").content(r1Json)
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isBadRequest()).andReturn();
+		
+		//Retrieve common friend success
+		emailList.clear();
+		emailList.add("email2@email.com");
+		emailList.add("email3@email.com");
+		
+		bean = new TwoEmailRequestBean();
+		bean.setFriends(emailList);
+		
+		r1Json = JsonUtil.toJson(bean);
+		
+		result = mvc.perform(post("/user/commonfriendlist").content(r1Json)
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andReturn();
+		
+		FriendListResponseBean response = JsonUtil.toObject(result.getResponse().getContentAsString(), FriendListResponseBean.class);
+		assertTrue(response.getCount() == 1);
+		
+		//delete test data
+		mvc.perform(delete("/user").param("email1", "email2@email.com").param("email2", "email@email.com").param("delete", "false")).andReturn();
+		mvc.perform(delete("/user").param("email1", "email@email.com").param("email2", "email3@email.com")).andReturn();
 	}
 }

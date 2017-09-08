@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,9 +46,22 @@ public class UserController {
 		
 	}	
 	
+	@RequestMapping(value="/commonfriendlist", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+	public FriendListResponseBean retrieveCommonFriendList(@Valid @RequestBody TwoEmailRequestBean requestBean){
+		List<String> result = userService.retrieveCommonFriendList(requestBean.getFriends().get(0), requestBean.getFriends().get(1));
+		
+		FriendListResponseBean response = new FriendListResponseBean();
+		response.setSuccess(true);
+		response.setFriends(result);
+		response.setCount(result.size());
+		
+		return response;
+		
+	}	
+	
 	@RequestMapping(method=RequestMethod.DELETE)
-	public CommonResponseBean deleteUserByEmail(@RequestParam("email1")String email1,@RequestParam("email2")String email2){
-		userService.deleteUser(email1,email2);
+	public CommonResponseBean deleteUserByEmail(@RequestParam("email1")String email1,@RequestParam("email2")String email2, @RequestParam(value="delete",required=false)String delete){
+		userService.deleteUser(email1,email2,StringUtils.isEmpty(delete)?true:Boolean.getBoolean(delete));
 		
 		return new CommonResponseBean(true);
 	}
