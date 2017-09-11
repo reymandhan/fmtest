@@ -1,6 +1,7 @@
 package com.fm.bean;
 
 import java.util.List;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
