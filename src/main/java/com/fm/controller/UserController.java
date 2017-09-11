@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fm.bean.CommonResponseBean;
 import com.fm.bean.FriendListResponseBean;
+import com.fm.bean.RequestorTargetRequestBean;
 import com.fm.bean.SingleEmailRequestBean;
 import com.fm.bean.TwoEmailRequestBean;
+import com.fm.bean.UpdateRecipientRequestBean;
+import com.fm.bean.UpdateRecipientResponseBean;
 import com.fm.service.UserService;
 
 @RestController
@@ -58,6 +61,31 @@ public class UserController {
 		return response;
 		
 	}	
+	
+	@RequestMapping(value="/subscribe", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+    public CommonResponseBean createSubscribership(@Valid @RequestBody RequestorTargetRequestBean requestBean) {
+        userService.createSubscribership(requestBean.getRequestor(), requestBean.getTarget());
+        
+        return new CommonResponseBean(true);
+    }
+	
+	@RequestMapping(value="/block", method = RequestMethod.PUT, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+	public CommonResponseBean blockUser(@Valid @RequestBody RequestorTargetRequestBean requestBean){
+		userService.blockUser(requestBean.getRequestor(), requestBean.getTarget());
+		
+		return new CommonResponseBean(true);
+	}
+	
+	@RequestMapping(value="/updaterecipient", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+	public UpdateRecipientResponseBean retrieveUpdateRecipients(@Valid @RequestBody UpdateRecipientRequestBean requestBean){
+		List<String> result = userService.retrieveUpdateRecipient(requestBean.getSender(), requestBean.getText());
+		
+		UpdateRecipientResponseBean response = new UpdateRecipientResponseBean();
+		response.setSuccess(true);
+		response.setRecipients(result);
+		
+		return response;
+	}
 	
 	@RequestMapping(method=RequestMethod.DELETE)
 	public CommonResponseBean deleteUserByEmail(@RequestParam("email1")String email1,@RequestParam("email2")String email2, @RequestParam(value="delete",required=false)String delete){
