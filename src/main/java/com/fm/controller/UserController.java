@@ -22,6 +22,8 @@ import com.fm.bean.UpdateRecipientRequestBean;
 import com.fm.bean.UpdateRecipientResponseBean;
 import com.fm.service.UserService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -87,6 +89,7 @@ public class UserController {
 		return response;
 	}
 	
+	@ApiOperation(hidden=true, value="")
 	@RequestMapping(method=RequestMethod.DELETE)
 	public CommonResponseBean deleteUserByEmail(@RequestParam("email1")String email1,@RequestParam("email2")String email2, @RequestParam(value="delete",required=false)String delete){
 		userService.deleteUser(email1,email2,StringUtils.isEmpty(delete)?true:Boolean.getBoolean(delete));
